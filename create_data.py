@@ -114,7 +114,8 @@ def templates_from_raw_images(data_dir, id2label, shape=(100,100)):
         # Get list of image files for this class
         img_files = []
         for ext in ['*.jpg', '*.png']:
-            img_files.extend(glob.glob(os.path.join(dirpath, ext)))
+            sub_files = sorted(glob.glob(os.path.join(dirpath, ext)))
+            img_files.extend(sub_files)
         n_images = len(img_files)
 
         # For each image file convert to a template array
