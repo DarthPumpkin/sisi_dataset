@@ -315,39 +315,13 @@ def generate_data(templates, img_shape=(64,64), n_train=1024, n_valid=512, n_tes
     return data
 
 
-if __name__ == '__main__':
-    from viz import batch_of_images_to_grid, viz_segmentation_label, viz_overlayed_segmentation_label, show_template_image, show_img, array2pil
-
-    data_dir = "raw_images"
-    pickle_file_path = "data64_flat_grey.pickle" # Path to output pickle file
-    img_shape=(64,64)
-    n_train=5120
-    n_valid=1024
-    n_test=1024
-    rgb=False
-    noise = None
-    seed=45
-
+def main(data_dir='raw_images', pkl_fn="data64_flat_grey.pickle", img_shape=(64, 64), n_train=5120, n_valid=1024,
+         n_test=1024, rgb=False, noise=None, seed=45):
     templates = templates_from_raw_images(data_dir, id2label=id2label, shape=img_shape)
+    data = generate_data(templates, img_shape=img_shape, n_train=n_train, n_valid=n_valid, n_test=n_test, noise=noise,
+                         rgb=rgb, seed=seed)
+    obj2pickle(data, file=pkl_fn)
 
-    # # Visualize the templates
-    # show_template_image(batch_of_images_to_grid(templates[1], 5, 10))
-    # show_template_image(batch_of_images_to_grid(templates[2], 5, 10))
-    # show_template_image(batch_of_images_to_grid(templates[3], 5, 10))
 
-    data = generate_data(templates, img_shape=img_shape, n_train=n_train, n_valid=n_valid, n_test=n_test, noise=noise, rgb=rgb, seed=seed)
-
-    # # Visualize the data and labels
-    # X_grid = batch_of_images_to_grid(data["X_train"][:50], 5, 10)
-    # Y_grid = batch_of_images_to_grid(data["Y_train"][:50], 5, 10)
-    # show_img(X_grid)
-    # viz_segmentation_label(Y_grid, colormap=data["colormap"]).show()
-    # viz_overlayed_segmentation_label(X_grid, Y_grid, colormap=data["colormap"]).show()
-
-    # # Save sample images
-    # array2pil(X_grid).save("sample_train.jpg", "JPEG")
-    # viz_segmentation_label(Y_grid, colormap=data["colormap"], saveto="sample_labels.jpg")
-    # viz_overlayed_segmentation_label(X_grid, Y_grid, colormap=data["colormap"], saveto="sample_overlayed.jpg")
-
-    # Save as a pickle
-    obj2pickle(data, file=pickle_file_path)
+if __name__ == '__main__':
+    main()
